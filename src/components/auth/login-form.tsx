@@ -14,16 +14,19 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "../../schemas/auth-schema";
 import { Input } from "../ui/input";
-
-import SubmitButton from "../submit-button";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { loginAction } from "../../actions/auth-action";
 import FormError from "../form-error";
 import FormSuccess from "../form-success";
+import { Button } from "../ui/button";
+import { Loader2 } from "lucide-react";
 
 export default function LoginForm() {
-  const [error, setError] = useState<string | undefined>("");
-  const [success, setSuccess] = useState<string | undefined>("");
+  const [isPending, startTransition] = useTransition();
+  const [formStatus, setFormStatus] = useState<{
+    error?: string;
+    success?: string;
+  }>({});
 
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -33,29 +36,30 @@ export default function LoginForm() {
     },
   });
 
-  function onSubmit(data: z.infer<typeof loginSchema>) {
-    setError("");
-    setSuccess("");
-    console.log(data);
+  const onSubmit = async (data: z.infer<typeof loginSchema>) => {
+    setFormStatus({}); // Clear previous status
 
-    loginAction(data)
-      .then((response) => {
-        if (response.error) {
-          setError(response.error);
-        } else {
-          setSuccess(response.success);
-        }
-      })
-      .catch((error) => {
-        setError(error);
-      });
-  }
+    startTransition(async () => {
+      try {
+        const response = await loginAction(data);
+        setFormStatus(
+          response.error
+            ? { error: response.error }
+            : { success: response.success }
+        );
+      } catch (error) {
+        setFormStatus({
+          error: error instanceof Error ? error.message : "An error occurred",
+        });
+      }
+    });
+  };
 
   return (
     <CardWrapper
       titleFooter="Sign up"
       titleHeader="Sign in to Acme Inc"
-      backButtonHref="/auth/register"
+      backButtonHref="/auth/signup"
       backButtonLabel="Don't have an account?"
       headerLabel="Welcome back! Please sign in to continue"
       showSocial
@@ -68,6 +72,7 @@ export default function LoginForm() {
           <FormField
             control={form.control}
             name="email"
+            disabled={isPending}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Email</FormLabel>
@@ -85,6 +90,7 @@ export default function LoginForm() {
           <FormField
             control={form.control}
             name="password"
+            disabled={isPending}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Password</FormLabel>
@@ -95,10 +101,12 @@ export default function LoginForm() {
               </FormItem>
             )}
           />
-          <FormError message={error} />
-          <FormSuccess message={success} />
+          <FormError message={formStatus.error} />
+          <FormSuccess message={formStatus.success} />
           <div className="pt-4">
-            <SubmitButton pendingLabel="logging in...">Login</SubmitButton>
+            <Button className="w-full" type="submit" disabled={isPending}>
+              {isPending ? <Loader2 className="animate-spin" /> : "Sign in"}
+            </Button>
           </div>
         </form>
       </Form>

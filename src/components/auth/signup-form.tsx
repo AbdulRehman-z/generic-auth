@@ -17,12 +17,12 @@ import { registerSchema } from "../../schemas/auth-schema";
 import { Input } from "../ui/input";
 
 import { useState, useTransition } from "react";
-import { registerAction } from "../../actions/auth-action";
+import { signupAction } from "../../actions/auth-action";
 import FormError from "../form-error";
 import FormSuccess from "../form-success";
 import { Button } from "../ui/button";
 
-export default function RegisterForm() {
+export default function SignupForm() {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
@@ -41,7 +41,7 @@ export default function RegisterForm() {
     setSuccess("");
     console.log(data);
     startTransition(() =>
-      registerAction(data)
+      signupAction(data)
         .then((response) => {
           if (response.error) {
             setError(response.error);
