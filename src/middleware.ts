@@ -1,4 +1,3 @@
-// middleware.ts
 import { auth } from "@/auth";
 import {
   DEFAULT_LOGIN_REDIRECT,
@@ -7,7 +6,7 @@ import {
   publicRoutes,
 } from "@/routes";
 
-export default auth((req) => {
+export const middleware = auth((req) => {
   const isLoggedIn = !!req.auth;
   const { nextUrl } = req;
 

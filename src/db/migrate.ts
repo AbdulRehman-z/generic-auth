@@ -25,7 +25,7 @@ async function main() {
   }
 }
 
-main().catch((error) => {
+await main().catch((error) => {
   console.error("Migration failed:", error);
   process.exit(1);
 });

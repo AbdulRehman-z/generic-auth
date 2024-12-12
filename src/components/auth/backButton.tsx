@@ -1,10 +1,9 @@
 import Link from "next/link";
-import { Button } from "../ui/button";
 
 type BackButtonProps = {
   href: string;
   label: string;
-  titleFooter: string;
+  titleFooter?: string;
 };
 
 export default function BackButton({

@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 
 export default async function SettingsPage() {
   const session = await auth();
-
   return (
     <div className="min-h-screen p-4">
       <p>{JSON.stringify(session)}</p>
@@ -12,7 +11,9 @@ export default async function SettingsPage() {
         action={async () => {
           "use server";
 
-          await signOut();
+          await signOut({
+            redirectTo: "/auth/login",
+          });
         }}
       >
         <Button type="submit" size={"lg"}>

@@ -1,10 +1,10 @@
-export default function LoginLayout({
+export default function AuthLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-gray-500 flex justify-center items-center">
+    <div className="min-h-screen  flex justify-center items-center">
       {children}
     </div>
   );

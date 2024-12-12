@@ -4,7 +4,7 @@
  * @constant
  * @type {string[]}
  */
-export const authRoutes = ["/auth/login", "/auth/signup"];
+export const authRoutes = ["/auth/login", "/auth/signup", "/auth/reset", "/auth/error", "/auth/new-password", "/auth/2FA"];
 /**
  * The prefix path for authentication-related API routes.
  * This constant is used to define the base URL path for all authentication endpoints.
@@ -29,4 +29,4 @@ export const DEFAULT_LOGIN_REDIRECT = "/settings";
  * @constant
  * @type {string}
  */
-export const publicRoutes = "/";
+export const publicRoutes = ["/", "/auth/verification"];

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { ThemeProvider } from "next-themes";
+import { ModeToggle } from "@/components/toggle-theme";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -26,9 +28,24 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
+        suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <main className="min-h-screen content-center">{children}</main>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+        // disableTransitionOnChange
+        >
+          <main className="min-h-screen relative content-center">
+            <div className="absolute top-7 right-8">
+              <ModeToggle />
+            </div>
+            <div>
+              {children}
+            </div>
+          </main>
+        </ThemeProvider>
       </body>
     </html>
   );

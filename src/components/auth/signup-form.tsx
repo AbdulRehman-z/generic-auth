@@ -1,6 +1,10 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { signupSchema } from "../../schemas/auth-schema";
 import {
   Form,
   FormControl,
@@ -9,26 +13,24 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { Loader2 } from "lucide-react";
-import CardWrapper from "./card-wrapper";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { registerSchema } from "../../schemas/auth-schema";
 import { Input } from "../ui/input";
+import CardWrapper from "./card-wrapper";
 
 import { useState, useTransition } from "react";
-import { signupAction } from "../../actions/auth-action";
+import { signupAction } from "../../actions/signup-action";
 import FormError from "../form-error";
 import FormSuccess from "../form-success";
 import { Button } from "../ui/button";
 
 export default function SignupForm() {
   const [isPending, startTransition] = useTransition();
-  const [error, setError] = useState<string | undefined>("");
-  const [success, setSuccess] = useState<string | undefined>("");
+  const [formStatus, setFormStatus] = useState<{
+    error?: string;
+    success?: string;
+  }>({});
 
-  const form = useForm<z.infer<typeof registerSchema>>({
-    resolver: zodResolver(registerSchema),
+  const form = useForm<z.infer<typeof signupSchema>>({
+    resolver: zodResolver(signupSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -36,23 +38,25 @@ export default function SignupForm() {
     },
   });
 
-  function onSubmit(data: z.infer<typeof registerSchema>) {
-    setError("");
-    setSuccess("");
+  async function onSubmit(data: z.infer<typeof signupSchema>) {
+    setFormStatus({}); // Clear previous status
     console.log(data);
-    startTransition(() =>
+
+    startTransition(() => {
       signupAction(data)
         .then((response) => {
-          if (response.error) {
-            setError(response.error);
-          } else {
-            setSuccess(response.success);
-          }
+          setFormStatus(
+            response.error
+              ? { error: response.error }
+              : { success: response.success }
+          );
         })
         .catch((error) => {
-          setError(error);
-        })
-    );
+          setFormStatus({
+            error: error instanceof Error ? error.message : "An error occurred",
+          });
+        });
+    });
   }
 
   return (
@@ -115,8 +119,8 @@ export default function SignupForm() {
               </FormItem>
             )}
           />
-          <FormError message={error} />
-          <FormSuccess message={success} />
+          <FormError message={formStatus.error} />
+          <FormSuccess message={formStatus.success} />
           <div className="pt-4">
             <Button className="w-full " type="submit" disabled={isPending}>
               {isPending ? (

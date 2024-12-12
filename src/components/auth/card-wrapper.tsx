@@ -9,8 +9,8 @@ type CardWrapperProps = {
   backButtonLabel: string;
   backButtonHref: string;
   showSocial?: boolean;
-  titleFooter: string;
-  titleHeader: string;
+  titleFooter?: string;
+  titleHeader?: string;
 };
 
 export default function CardWrapper({
@@ -23,11 +23,11 @@ export default function CardWrapper({
   showSocial,
 }: CardWrapperProps) {
   return (
-    <Card className="bg-card/95 w-[500px] flex flex-col items-center">
+    <Card className=" w-[500px] flex flex-col items-center">
       <div className="w-full flex flex-col items-center rounded-xl">
-        <div className="bg-card w-full shadow px-8 py-2 rounded-xl">
+        <div className="w-full px-8  ">
           <CardHeader className="space-y-6">
-            <Header titleHeader={titleHeader} label={headerLabel} />
+            <Header titleHeader={titleHeader!} label={headerLabel} />
           </CardHeader>
           {showSocial && (
             <CardFooter className="pb-3">
@@ -43,7 +43,7 @@ export default function CardWrapper({
             label={backButtonLabel}
           />
         </CardFooter>
-      </div>
-    </Card>
+      </div >
+    </Card >
   );
 }

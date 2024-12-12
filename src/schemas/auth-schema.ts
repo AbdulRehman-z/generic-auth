@@ -11,9 +11,12 @@ export const loginSchema = z.object({
   password: z.string().min(1, {
     message: "Password is required",
   }),
+  code: z.optional(z.string().min(6, {
+    message: "Your one-time password must be 6 characters.",
+  })),
 });
 
-export const registerSchema = z.object({
+export const signupSchema = z.object({
   name: z
     .string()
     .min(3, {
@@ -33,3 +36,13 @@ export const registerSchema = z.object({
     message: "Password must be at least 6 characters",
   }),
 });
+
+export const resetSchema = z.object({
+  email: z.string().email()
+})
+
+export const newPasswordSchema = z.object({
+  password: z.string().min(6, {
+    message: "Password must be at least 6 characters",
+  }),
+})

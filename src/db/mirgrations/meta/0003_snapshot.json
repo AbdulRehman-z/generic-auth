@@ -1,6 +1,6 @@
 {
-  "id": "c66e6066-504e-4e64-8c5d-b7eb78f52293",
-  "prevId": "4ef3849c-5eb2-4256-8538-d5967faa8950",
+  "id": "352fdb28-dc0f-4e30-b03f-1d3918b8ee98",
+  "prevId": "b1cb5792-437d-46f8-a19b-f607e12d0891",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -101,6 +101,145 @@
         }
       },
       "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.passwordResetToken": {
+      "name": "passwordResetToken",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "token": {
+          "name": "token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expires": {
+          "name": "expires",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "passwordResetToken_email_token_unique": {
+          "name": "passwordResetToken_email_token_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email",
+            "token"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.twoFactorConfirmation": {
+      "name": "twoFactorConfirmation",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "twoFactorConfirmation_userId_user_id_fk": {
+          "name": "twoFactorConfirmation_userId_user_id_fk",
+          "tableFrom": "twoFactorConfirmation",
+          "tableTo": "user",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "twoFactorConfirmation_userId_unique": {
+          "name": "twoFactorConfirmation_userId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "userId"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.twoFactorToken": {
+      "name": "twoFactorToken",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "token": {
+          "name": "token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expires": {
+          "name": "expires",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "twoFactorToken_email_token_unique": {
+          "name": "twoFactorToken_email_token_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email",
+            "token"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
